@@ -1,0 +1,522 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="DreamPie Format" content="1">
+<title>DreamPie History</title>
+<style>
+body {
+  white-space: pre-wrap;
+  font-family: Courier New;
+  font-size: 16384;
+  color: #6dc63c;
+  background-color: #181a65;
+}
+span.folded {
+ display: none;
+}
+span.commandsep {
+ display: none;
+}
+span.command-defs {
+}
+span.command {
+}
+span.output {
+}
+span.fold-message {
+  color: #a7a7a7;
+  background-color: #003b6c;
+}
+span.message {
+  color: #ffff00;
+}
+span.prompt {
+  color: #e400b6;
+}
+span.exception {
+  color: #ff8080;
+}
+span.result-ind {
+  color: #0000ff;
+}
+span.result {
+  color: #bcffff;
+}
+span.stderr {
+  color: #ff8080;
+}
+span.stdout {
+  color: #bcffff;
+}
+span.stdin {
+}
+span.error {
+  background-color: #ff0000;
+}
+span.bracket-3 {
+  color: #ffabab;
+}
+span.bracket-2 {
+  color: #dfabff;
+}
+span.bracket-1 {
+  color: #abffab;
+}
+span.bracket-match {
+  background-color: #00008b;
+}
+span.comment {
+  color: #c9a3a0;
+}
+span.number {
+  color: #aeacff;
+}
+span.string {
+  color: #00e400;
+}
+span.builtin {
+  color: #efcfcf;
+}
+span.keyword {
+  color: #ff7700;
+}
+</style>
+</head>
+<body><span class="message">==================== New Session ====================
+</span><span class="command"><span class="prompt">&gt;&gt;&gt; </span><span class="comment"># @Author: jeremiah.marks</span>
+<span class="prompt">... </span><span class="comment"># @Date:   2016-04-06 01:21:17</span>
+<span class="prompt">... </span><span class="comment"># @Last Modified by:   jeremiah.marks</span>
+<span class="prompt">... </span><span class="comment"># @Last Modified time: 2016-04-06 01:23:21</span>
+<span class="prompt">... </span><span class="keyword">import</span> httplib2
+<span class="prompt">... </span><span class="keyword">import</span> os
+<span class="prompt">... </span>
+<span class="prompt">... </span><span class="keyword">from</span> apiclient <span class="keyword">import</span> discovery
+<span class="prompt">... </span><span class="keyword">import</span> oauth2client
+<span class="prompt">... </span><span class="keyword">from</span> oauth2client <span class="keyword">import</span> client
+<span class="prompt">... </span><span class="keyword">from</span> oauth2client <span class="keyword">import</span> tools
+<span class="prompt">... </span><span class="keyword">import</span> argparse
+<span class="prompt">... </span>flags = argparse.Namespace(auth_host_name=<span class="string">'localhost'</span>, auth_host_port=[<span class="number">8080</span>, <span class="number">8090</span>], logging_level=<span class="string">'ERROR'</span>, noauth_local_webserver=<span class="builtin">False</span>)
+<span class="prompt">... </span>SCOPES = <span class="string">'https://www.googleapis.com/auth/contacts.readonly'</span>
+<span class="prompt">... </span>CLIENT_SECRET_FILE = <span class="string">"C:\\Users\\jeremiah.marks\\Documents\\GitHub\\gdata-python-client\\client_secret.json"</span>
+<span class="prompt">... </span>APPLICATION_NAME = <span class="string">'ContactsToCSV'</span>
+<span class="prompt">... </span><span class="keyword">def</span> get_credentials():
+</span><span class="command-defs"><span class="command"><span class="prompt">... </span>    <span class="string">"""Gets valid user credentials from storage.
+</span><span class="prompt">... </span><span class="string">
+</span><span class="prompt">... </span><span class="string">    If nothing has been stored, or if the stored credentials are invalid,
+</span><span class="prompt">... </span><span class="string">    the OAuth2 flow is completed to obtain the new credentials.
+</span><span class="prompt">... </span><span class="string">
+</span><span class="prompt">... </span><span class="string">    Returns:
+</span><span class="prompt">... </span><span class="string">        Credentials, the obtained credential.
+</span><span class="prompt">... </span><span class="string">    """</span>
+<span class="prompt">... </span>    home_dir = os.path.expanduser(<span class="string">'~'</span>)
+<span class="prompt">... </span>    credential_dir = os.path.join(home_dir, <span class="string">'GoogleExport'</span>)
+<span class="prompt">... </span>    <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(credential_dir):
+<span class="prompt">... </span>        os.makedirs(credential_dir)
+<span class="prompt">... </span>    credential_path = os.path.join(credential_dir, <span class="string">'GoogContactsExportToCSV'</span>)
+<span class="prompt">... </span>
+<span class="prompt">... </span>    store = oauth2client.<span class="builtin">file</span>.Storage(credential_path)
+<span class="prompt">... </span>    credentials = store.get()
+<span class="prompt">... </span>    <span class="keyword">if</span> <span class="keyword">not</span> credentials <span class="keyword">or</span> credentials.invalid:
+<span class="prompt">... </span>        flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE, SCOPES)
+<span class="prompt">... </span>        flow.user_agent = APPLICATION_NAME
+<span class="prompt">... </span>        <span class="keyword">if</span> flags:
+<span class="prompt">... </span>            credentials = tools.run_flow(flow, store, flags)
+<span class="prompt">... </span>        <span class="keyword">else</span>: <span class="comment"># Needed only for compatibility with Python 2.6</span>
+<span class="prompt">... </span>            credentials = tools.run(flow, store)
+<span class="prompt">... </span>        <span class="keyword">print</span>(<span class="string">'Storing credentials to '</span> + credential_path)
+<span class="prompt">... </span>    <span class="keyword">return</span> credentials
+</span></span><span class="command"><span class="prompt">... </span>credentials = get_credentials()
+<span class="prompt">... </span>http = credentials.authorize(httplib2.Http())
+<span class="prompt">... </span>service = discovery.build(<span class="string">'people'</span>, <span class="string">'v1'</span>, http=http,
+<span class="prompt">... </span>    discoveryServiceUrl=<span class="string">'https://people.googleapis.com/$discovery/rest'</span>)
+<span class="prompt">... </span>allcontacts={}
+<span class="prompt">... </span>results = service.people().connections().<span class="builtin">list</span>(resourceName=<span class="string">'people/me'</span>, pageSize=<span class="number">10</span>).execute()
+</span><span class="commandsep"></span><span class="output"><span class="stdout">Your browser has been opened to visit:
+
+    https://accounts.google.com/o/oauth2/auth?scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcontacts.readonly&amp;redirect_uri=http%3A%2F%2Flocalhost%3A8080%2F&amp;response_type=code&amp;client_id=515292396488-mqeuihkft538tne0sklf03jg3qcgs2lh.apps.googleusercontent.com&amp;access_type=offline
+
+If your browser is on a different machine then exit and re-run this
+application with the command-line parameter 
+
+  --noauth_local_webserver
+
+Authentication successful.
+Storing credentials to C:\Users\jeremiah.marks\GoogleExport\GoogContactsExportToCSV
+</span></span><span class="command"><span class="prompt">&gt;&gt;&gt; </span>connections = results.get(<span class="string">'connections'</span>, [])
+</span><span class="commandsep"></span><span class="command"><span class="prompt">&gt;&gt;&gt; </span>connections[<span class="number">0</span>]
+</span><span class="commandsep"></span><span class="output"><span class="result-ind">0: </span><span class="result">{u'etag': u'BYHH8sd5d3U=',
+ u'metadata': {u'objectType': u'PERSON',
+               u'sources': [{u'etag': u'#BYHH8sd5d3U=',
+                             u'id': u'75af98e8099b00c2',
+                             u'type': u'CONTACT'}]},
+ u'names': [{u'displayName': u'Bobby Socks',
+             u'displayNameLastFirst': u'Socks, Bobby',
+             u'familyName': u'Socks',
+             u'givenName': u'Bobby',
+             u'metadata': {u'primary': True,
+                           u'source': {u'id': u'75af98e8099b00c2',
+                                       u'type': u'CONTACT'}}}],
+ u'resourceName': u'people/c8480164745722921154'}
+</span></span><span class="command"><span class="prompt">&gt;&gt;&gt; </span>connections[<span class="number">0</span>][<span class="string">u'resourceName'</span>]
+</span><span class="commandsep"></span><span class="output"><span class="result-ind">1: </span><span class="result">u'people/c8480164745722921154'
+</span></span><span class="command"><span class="prompt">&gt;&gt;&gt; </span>results
+</span><span class="commandsep"></span><span class="output"><span class="result-ind">2: </span><span class="result">{u'connections': [{u'etag': u'BYHH8sd5d3U=',</span></span><span class="folded"><span class="output"><span class="result">
+                   u'metadata': {u'objectType': u'PERSON',
+                                 u'sources': [{u'etag': u'#BYHH8sd5d3U=',
+                                               u'id': u'75af98e8099b00c2',
+                                               u'type': u'CONTACT'}]},
+                   u'names': [{u'displayName': u'Bobby Socks',
+                               u'displayNameLastFirst': u'Socks, Bobby',
+                               u'familyName': u'Socks',
+                               u'givenName': u'Bobby',
+                               u'metadata': {u'primary': True,
+                                             u'source': {u'id': u'75af98e8099b00c2',
+                                                         u'type': u'CONTACT'}}}],
+                   u'resourceName': u'people/c8480164745722921154'},
+                  {u'etag': u'TNCPyLac7MU=',
+                   u'metadata': {u'objectType': u'PERSON',
+                                 u'sources': [{u'etag': u'#BnuWVndT/Zw=',
+                                               u'id': u'55d3da2a0cd45799',
+                                               u'type': u'CONTACT'},
+                                              {u'id': u'112157600444781632244',
+                                               u'type': u'PROFILE'}]},
+                   u'names': [{u'displayName': u'Tilla',
+                               u'displayNameLastFirst': u'Tilla',
+                               u'givenName': u'Tilla',
+                               u'metadata': {u'primary': True,
+                                             u'source': {u'id': u'55d3da2a0cd45799',
+                                                         u'type': u'CONTACT'}}},
+                              {u'displayName': u'Tor Tilla',
+                               u'displayNameLastFirst': u'Tilla, Tor',
+                               u'familyName': u'Tilla',
+                               u'givenName': u'Tor',
+                               u'metadata': {u'source': {u'id': u'112157600444781632244',
+                                                         u'type': u'PROFILE'}}}],
+                   u'photos': [{u'metadata': {u'primary': True,
+                                              u'source': {u'id': u'112157600444781632244',
+                                                          u'type': u'PROFILE'}},
+                                u'url': u'https://lh4.googleusercontent.com/-I6WSCQaG25w/AAAAAAAAAAI/AAAAAAAAAA0/QOd32tjowMw/photo.jpg'}],
+                   u'resourceName': u'people/112157600444781632244',
+                   u'urls': [{u'formattedType': u'Profile',
+                              u'metadata': {u'primary': True,
+                                            u'source': {u'id': u'112157600444781632244',
+                                                        u'type': u'PROFILE'},
+                                            u'verified': True},
+                              u'type': u'profile',
+                              u'value': u'https://plus.google.com/112157600444781632244'}]}],
+ u'nextSyncToken': u'CICOstW-KhIBMRjtEioECAAQAQ'}
+</span></span></span><span class="fold-message">[About 44 more lines. Double-click to unfold]
+</span><span class="command"><span class="prompt">&gt;&gt;&gt; </span>results = service.people().connections().<span class="builtin">list</span>(resourceName=<span class="string">'people/me'</span>, pageSize=<span class="number">1</span>).execute()
+</span><span class="commandsep"></span><span class="command"><span class="prompt">&gt;&gt;&gt; </span>connections = results.get(<span class="string">'connections'</span>, [])
+</span><span class="commandsep"></span><span class="command"><span class="prompt">&gt;&gt;&gt; </span>connections
+</span><span class="commandsep"></span><span class="output"><span class="result-ind">3: </span><span class="result">[{u'etag': u'BYHH8sd5d3U=',
+  u'metadata': {u'objectType': u'PERSON',
+                u'sources': [{u'etag': u'#BYHH8sd5d3U=',
+                              u'id': u'75af98e8099b00c2',
+                              u'type': u'CONTACT'}]},
+  u'names': [{u'displayName': u'Bobby Socks',
+              u'displayNameLastFirst': u'Socks, Bobby',
+              u'familyName': u'Socks',
+              u'givenName': u'Bobby',
+              u'metadata': {u'primary': True,
+                            u'source': {u'id': u'75af98e8099b00c2',
+                                        u'type': u'CONTACT'}}}],
+  u'resourceName': u'people/c8480164745722921154'}]
+</span></span><span class="command"><span class="prompt">&gt;&gt;&gt; </span>results
+</span><span class="commandsep"></span><span class="output"><span class="result-ind">4: </span><span class="result">{u'connections': [{u'etag': u'BYHH8sd5d3U=',
+                   u'metadata': {u'objectType': u'PERSON',
+                                 u'sources': [{u'etag': u'#BYHH8sd5d3U=',
+                                               u'id': u'75af98e8099b00c2',
+                                               u'type': u'CONTACT'}]},
+                   u'names': [{u'displayName': u'Bobby Socks',
+                               u'displayNameLastFirst': u'Socks, Bobby',
+                               u'familyName': u'Socks',
+                               u'givenName': u'Bobby',
+                               u'metadata': {u'primary': True,
+                                             u'source': {u'id': u'75af98e8099b00c2',
+                                                         u'type': u'CONTACT'}}}],
+                   u'resourceName': u'people/c8480164745722921154'}],
+ u'nextPageToken': u'CAEQ55u91b4q',
+ u'nextSyncToken': u'CNbNvNW-KhIBMRjtEioECAAQAQ'}
+</span></span><span class="command"><span class="prompt">&gt;&gt;&gt; </span>connections = results.get(<span class="string">'connections'</span>)
+</span><span class="commandsep"></span><span class="command"><span class="prompt">&gt;&gt;&gt; </span>connections
+</span><span class="commandsep"></span><span class="output"><span class="result-ind">5: </span><span class="result">[{u'etag': u'BYHH8sd5d3U=',
+  u'metadata': {u'objectType': u'PERSON',
+                u'sources': [{u'etag': u'#BYHH8sd5d3U=',
+                              u'id': u'75af98e8099b00c2',
+                              u'type': u'CONTACT'}]},
+  u'names': [{u'displayName': u'Bobby Socks',
+              u'displayNameLastFirst': u'Socks, Bobby',
+              u'familyName': u'Socks',
+              u'givenName': u'Bobby',
+              u'metadata': {u'primary': True,
+                            u'source': {u'id': u'75af98e8099b00c2',
+                                        u'type': u'CONTACT'}}}],
+  u'resourceName': u'people/c8480164745722921154'}]
+</span></span><span class="command"><span class="prompt">&gt;&gt;&gt; </span>results = service.people().connections().<span class="builtin">list</span>(resourceName=<span class="string">'people/me'</span>).execute()
+</span><span class="commandsep"></span><span class="command"><span class="prompt">&gt;&gt;&gt; </span>connections = results.get(<span class="string">'connections'</span>)
+</span><span class="commandsep"></span><span class="command"><span class="prompt">&gt;&gt;&gt; </span>connections[<span class="number">0</span>]
+</span><span class="commandsep"></span><span class="output"><span class="result-ind">6: </span><span class="result">{u'etag': u'BYHH8sd5d3U=',
+ u'metadata': {u'objectType': u'PERSON',
+               u'sources': [{u'etag': u'#BYHH8sd5d3U=',
+                             u'id': u'75af98e8099b00c2',
+                             u'type': u'CONTACT'}]},
+ u'names': [{u'displayName': u'Bobby Socks',
+             u'displayNameLastFirst': u'Socks, Bobby',
+             u'familyName': u'Socks',
+             u'givenName': u'Bobby',
+             u'metadata': {u'primary': True,
+                           u'source': {u'id': u'75af98e8099b00c2',
+                                       u'type': u'CONTACT'}}}],
+ u'resourceName': u'people/c8480164745722921154'}
+</span></span><span class="command"><span class="prompt">&gt;&gt;&gt; </span><span class="keyword">def</span> getContacts(nextPageToken=<span class="builtin">None</span>):
+</span><span class="command-defs"><span class="command"><span class="prompt">... </span>  <span class="keyword">if</span> nextPageToken <span class="keyword">is</span> <span class="builtin">None</span>:
+<span class="prompt">... </span>    <span class="keyword">return</span> service.people().connections().<span class="builtin">list</span>(resourceName=<span class="string">'people/me'</span>).execute()
+<span class="prompt">... </span>  <span class="keyword">else</span>:
+<span class="prompt">... </span>    <span class="keyword">return</span> service.people().connections().<span class="builtin">list</span>(resourceName=<span class="string">'people/me'</span>, nextPageToken=nextPageToken).execute()</span></span><span class="command">
+</span><span class="commandsep"></span><span class="command"><span class="prompt">&gt;&gt;&gt; </span>credentials = get_credentials()
+<span class="prompt">... </span>http = credentials.authorize(httplib2.Http())
+<span class="prompt">... </span>service = discovery.build(<span class="string">'people'</span>, <span class="string">'v1'</span>, http=http,
+<span class="prompt">... </span>    discoveryServiceUrl=<span class="string">'https://people.googleapis.com/$discovery/rest'</span>)
+<span class="prompt">... </span>allcontacts={}
+<span class="prompt">... </span>nextpagetoken = <span class="builtin">None</span>
+<span class="prompt">... </span><span class="keyword">print</span> <span class="string">"Retrieving all contacts"</span>
+<span class="prompt">... </span><span class="keyword">while</span> <span class="builtin">True</span>:
+<span class="prompt">... </span>  <span class="keyword">print</span> <span class="string">"total contacts: "</span> + <span class="builtin">len</span>(allcontacts)
+<span class="prompt">... </span>  results = getContacts(nextpagetoken)
+<span class="prompt">... </span>  connections = results.get(<span class="string">'connections'</span>, [])
+<span class="prompt">... </span>  <span class="keyword">for</span> eachcon <span class="keyword">in</span> connections:
+<span class="prompt">... </span>    allcontacts[eachcon[<span class="string">'resourceName'</span>]] = <span class="builtin">dict</span>(eachcon)
+<span class="prompt">... </span>  <span class="keyword">if</span> <span class="string">'nextPageToken'</span> <span class="keyword">not</span> <span class="keyword">in</span> results:
+<span class="prompt">... </span>    <span class="keyword">break</span>
+<span class="prompt">... </span>  nextpagetoken = results[<span class="string">'nextPageToken'</span>]
+</span><span class="commandsep"></span><span class="output"><span class="stdout">Retrieving all contacts
+</span><span class="exception">Traceback (most recent call last):
+  File "&lt;pyshell#16&gt;", line 9, in &lt;module&gt;
+    print "total contacts: " + len(allcontacts)
+TypeError: cannot concatenate 'str' and 'int' objects
+</span></span><span class="command"><span class="prompt">&gt;&gt;&gt; </span><span class="keyword">import</span> httplib2
+<span class="prompt">... </span><span class="keyword">import</span> os
+<span class="prompt">... </span>
+<span class="prompt">... </span><span class="keyword">from</span> apiclient <span class="keyword">import</span> discovery
+<span class="prompt">... </span><span class="keyword">import</span> oauth2client
+<span class="prompt">... </span><span class="keyword">from</span> oauth2client <span class="keyword">import</span> client
+<span class="prompt">... </span><span class="keyword">from</span> oauth2client <span class="keyword">import</span> tools
+<span class="prompt">... </span>
+<span class="prompt">... </span><span class="keyword">try</span>:
+<span class="prompt">... </span>    <span class="keyword">import</span> argparse
+<span class="prompt">... </span>    flags = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
+<span class="prompt">... </span><span class="keyword">except</span> <span class="builtin">ImportError</span>:
+<span class="prompt">... </span>    flags = <span class="builtin">None</span>
+<span class="prompt">... </span><span class="keyword">print</span> <span class="builtin">str</span>(flags)
+<span class="prompt">... </span><span class="string">"""
+</span><span class="prompt">... </span><span class="string">
+</span><span class="prompt">... </span><span class="string">
+</span><span class="prompt">... </span><span class="string">Provides information about a list of specific people by specifying a list of requested resource names. Use people/me to indicate the authenticated user.
+</span><span class="prompt">... </span><span class="string">
+</span><span class="prompt">... </span><span class="string">HTTP request
+</span><span class="prompt">... </span><span class="string">
+</span><span class="prompt">... </span><span class="string">GET https://people.googleapis.com/v1/people:batchGet
+</span><span class="prompt">... </span><span class="string">
+</span><span class="prompt">... </span><span class="string">Query parameters
+</span><span class="prompt">... </span><span class="string">
+</span><span class="prompt">... </span><span class="string">Parameter name  Type  Description
+</span><span class="prompt">... </span><span class="string">resourceNames string  The resource name, such as one returned by people.connections.list, of one of the people to provide information about. You can include this parameter up to 50 times in one request.
+</span><span class="prompt">... </span><span class="string">
+</span><span class="prompt">... </span><span class="string">"""</span>
+<span class="prompt">... </span><span class="comment"># If modifying these scopes, delete your previously saved credentials</span>
+<span class="prompt">... </span><span class="comment"># at ~/.credentials/people-python-quickstart.json</span>
+<span class="prompt">... </span>SCOPES = <span class="string">'https://www.googleapis.com/auth/contacts.readonly'</span>
+<span class="prompt">... </span>CLIENT_SECRET_FILE = <span class="string">"C:\\Users\\jeremiah.marks\\Documents\\GitHub\\gdata-python-client\\client_secret.json"</span>
+<span class="prompt">... </span>APPLICATION_NAME = <span class="string">'ContactsToCSV'</span>
+<span class="prompt">... </span>
+<span class="prompt">... </span><span class="keyword">def</span> get_credentials():
+</span><span class="command-defs"><span class="command"><span class="prompt">... </span>    <span class="string">"""Gets valid user credentials from storage.
+</span><span class="prompt">... </span><span class="string">
+</span><span class="prompt">... </span><span class="string">    If nothing has been stored, or if the stored credentials are invalid,
+</span><span class="prompt">... </span><span class="string">    the OAuth2 flow is completed to obtain the new credentials.
+</span><span class="prompt">... </span><span class="string">
+</span><span class="prompt">... </span><span class="string">    Returns:
+</span><span class="prompt">... </span><span class="string">        Credentials, the obtained credential.
+</span><span class="prompt">... </span><span class="string">    """</span>
+<span class="prompt">... </span>    home_dir = os.path.expanduser(<span class="string">'~'</span>)
+<span class="prompt">... </span>    credential_dir = os.path.join(home_dir, <span class="string">'.credentials'</span>)
+<span class="prompt">... </span>    <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(credential_dir):
+<span class="prompt">... </span>        os.makedirs(credential_dir)
+<span class="prompt">... </span>    credential_path = os.path.join(credential_dir, <span class="string">'GoogContactsExportToCSV'</span>)
+<span class="prompt">... </span>
+<span class="prompt">... </span>    store = oauth2client.<span class="builtin">file</span>.Storage(credential_path)
+<span class="prompt">... </span>    credentials = store.get()
+<span class="prompt">... </span>    <span class="keyword">if</span> <span class="keyword">not</span> credentials <span class="keyword">or</span> credentials.invalid:
+<span class="prompt">... </span>        flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE, SCOPES)
+<span class="prompt">... </span>        flow.user_agent = APPLICATION_NAME
+<span class="prompt">... </span>        <span class="keyword">if</span> flags:
+<span class="prompt">... </span>            credentials = tools.run_flow(flow, store, flags)
+<span class="prompt">... </span>        <span class="keyword">else</span>: <span class="comment"># Needed only for compatibility with Python 2.6</span>
+<span class="prompt">... </span>            credentials = tools.run(flow, store)
+<span class="prompt">... </span>        <span class="keyword">print</span>(<span class="string">'Storing credentials to '</span> + credential_path)
+<span class="prompt">... </span>    <span class="keyword">return</span> credentials
+</span></span><span class="command"><span class="prompt">... </span><span class="keyword">def</span> getContacts(nextPageToken=<span class="builtin">None</span>):
+</span><span class="command-defs"><span class="command"><span class="prompt">... </span>  <span class="keyword">if</span> nextPageToken <span class="keyword">is</span> <span class="builtin">None</span>:
+<span class="prompt">... </span>    <span class="keyword">return</span> service.people().connections().<span class="builtin">list</span>(resourceName=<span class="string">'people/me'</span>).execute()
+<span class="prompt">... </span>  <span class="keyword">else</span>:
+<span class="prompt">... </span>    <span class="keyword">return</span> service.people().connections().<span class="builtin">list</span>(resourceName=<span class="string">'people/me'</span>, nextPageToken=nextPageToken).execute()
+<span class="prompt">... </span>
+</span></span><span class="command"><span class="prompt">... </span><span class="keyword">def</span> main():
+</span><span class="command-defs"><span class="command"><span class="prompt">... </span>    <span class="string">"""Shows basic usage of the Google People API.
+</span><span class="prompt">... </span><span class="string">
+</span><span class="prompt">... </span><span class="string">    Creates a Google People API service object and outputs the name if
+</span><span class="prompt">... </span><span class="string">    available of 10 connections.
+</span><span class="prompt">... </span><span class="string">    """</span>
+</span></span><span class="command"><span class="prompt">... </span>credentials = get_credentials()
+<span class="prompt">... </span>http = credentials.authorize(httplib2.Http())
+<span class="prompt">... </span>service = discovery.build(<span class="string">'people'</span>, <span class="string">'v1'</span>, http=http,
+<span class="prompt">... </span>    discoveryServiceUrl=<span class="string">'https://people.googleapis.com/$discovery/rest'</span>)
+<span class="prompt">... </span>allcontacts={}
+<span class="prompt">... </span>nextpagetoken = <span class="builtin">None</span>
+<span class="prompt">... </span><span class="keyword">print</span> <span class="string">"Retrieving all contacts"</span>
+<span class="prompt">... </span><span class="keyword">while</span> <span class="builtin">True</span>:
+<span class="prompt">... </span>  <span class="keyword">print</span> <span class="string">"total contacts: "</span> + <span class="builtin">str</span>(<span class="builtin">len</span>(allcontacts))
+<span class="prompt">... </span>  results = getContacts(nextpagetoken)
+<span class="prompt">... </span>  connections = results.get(<span class="string">'connections'</span>, [])
+<span class="prompt">... </span>  <span class="keyword">for</span> eachcon <span class="keyword">in</span> connections:
+<span class="prompt">... </span>    allcontacts[eachcon[<span class="string">'resourceName'</span>]] = <span class="builtin">dict</span>(eachcon)
+<span class="prompt">... </span>  <span class="keyword">if</span> <span class="string">'nextPageToken'</span> <span class="keyword">not</span> <span class="keyword">in</span> results:
+<span class="prompt">... </span>    <span class="keyword">break</span>
+<span class="prompt">... </span>  nextpagetoken = results[<span class="string">'nextPageToken'</span>]
+<span class="prompt">... </span>
+<span class="prompt">... </span>
+<span class="prompt">... </span><span class="keyword">if</span> <span class="builtin">__name__</span> == <span class="string">'__main__'</span>:
+<span class="prompt">... </span>    main()
+</span><span class="commandsep"></span><span class="output"><span class="stdout">Namespace(auth_host_name='localhost', auth_host_port=[8080, 8090], logging_level='ERROR', noauth_local_webserver=False)
+Retrieving all contacts
+total contacts: 0
+total contacts: 0
+</span><span class="exception">Traceback (most recent call last):
+  File "&lt;pyshell#17&gt;", line 83, in &lt;module&gt;
+    results = getContacts(nextpagetoken)
+  File "&lt;pyshell#17&gt;", line 66, in getContacts
+    return service.people().connections().list(resourceName='people/me', nextPageToken=nextPageToken).execute()
+  File "C:\Users\jeremiah.marks\AppData\Local\Continuum\Anaconda2\lib\site-packages\googleapiclient\discovery.py", line 676, in method
+    raise TypeError('Got an unexpected keyword argument "%s"' % name)
+TypeError: Got an unexpected keyword argument "nextPageToken"
+</span></span><span class="command"><span class="prompt">&gt;&gt;&gt; </span><span class="keyword">def</span> getContacts(nextPageToken=<span class="builtin">None</span>):
+</span><span class="command-defs"><span class="command"><span class="prompt">... </span>  <span class="keyword">if</span> nextPageToken <span class="keyword">is</span> <span class="builtin">None</span>:
+<span class="prompt">... </span>    <span class="keyword">return</span> service.people().connections().<span class="builtin">list</span>(resourceName=<span class="string">'people/me'</span>).execute()
+<span class="prompt">... </span>  <span class="keyword">else</span>:
+<span class="prompt">... </span>    <span class="keyword">return</span> service.people().connections().<span class="builtin">list</span>(resourceName=<span class="string">'people/me'</span>, pageToken=nextPageToken).execute()</span></span><span class="command">
+</span><span class="commandsep"></span><span class="command"><span class="prompt">&gt;&gt;&gt; </span>credentials = get_credentials()
+<span class="prompt">... </span>http = credentials.authorize(httplib2.Http())
+<span class="prompt">... </span>service = discovery.build(<span class="string">'people'</span>, <span class="string">'v1'</span>, http=http,
+<span class="prompt">... </span>    discoveryServiceUrl=<span class="string">'https://people.googleapis.com/$discovery/rest'</span>)
+<span class="prompt">... </span>allcontacts={}
+<span class="prompt">... </span>nextpagetoken = <span class="builtin">None</span>
+<span class="prompt">... </span><span class="keyword">print</span> <span class="string">"Retrieving all contacts"</span>
+<span class="prompt">... </span><span class="keyword">while</span> <span class="builtin">True</span>:
+<span class="prompt">... </span>  <span class="keyword">print</span> <span class="string">"total contacts: "</span> + <span class="builtin">str</span>(<span class="builtin">len</span>(allcontacts))
+<span class="prompt">... </span>  results = getContacts(nextpagetoken)
+<span class="prompt">... </span>  connections = results.get(<span class="string">'connections'</span>, [])
+<span class="prompt">... </span>  <span class="keyword">for</span> eachcon <span class="keyword">in</span> connections:
+<span class="prompt">... </span>    allcontacts[eachcon[<span class="string">'resourceName'</span>]] = <span class="builtin">dict</span>(eachcon)
+<span class="prompt">... </span>  <span class="keyword">if</span> <span class="string">'nextPageToken'</span> <span class="keyword">not</span> <span class="keyword">in</span> results:
+<span class="prompt">... </span>    <span class="keyword">break</span>
+<span class="prompt">... </span>  nextpagetoken = results[<span class="string">'nextPageToken'</span>]
+<span class="prompt">... </span>
+<span class="prompt">... </span>
+<span class="prompt">... </span><span class="keyword">if</span> <span class="builtin">__name__</span> == <span class="string">'__main__'</span>:
+<span class="prompt">... </span>    main()
+</span><span class="commandsep"></span><span class="output"><span class="stdout">Retrieving all contacts
+total contacts: 0
+total contacts: 0
+</span></span><span class="command"><span class="prompt">&gt;&gt;&gt; </span>allcontacts
+</span><span class="commandsep"></span><span class="output"><span class="result-ind">7: </span><span class="result">{}
+</span></span><span class="command"><span class="prompt">&gt;&gt;&gt; </span>nextpagetoken = <span class="builtin">None</span>
+</span><span class="commandsep"></span><span class="command"><span class="prompt">&gt;&gt;&gt; </span>results = getContacts(nextpagetoken)
+</span><span class="commandsep"></span><span class="command"><span class="prompt">&gt;&gt;&gt; </span>results
+</span><span class="commandsep"></span><span class="output"><span class="result-ind">8: </span><span class="result">{u'nextPageToken': u'CGQQ7Y3z1b4q',
+ u'nextSyncToken': u'CM2_8tW-KhIBMRjtEioECAAQAQ'}
+</span></span><span class="command"><span class="prompt">&gt;&gt;&gt; </span>connections = results.get(<span class="string">'connections'</span>, [])
+</span><span class="commandsep"></span><span class="command"><span class="prompt">&gt;&gt;&gt; </span>connections
+</span><span class="commandsep"></span><span class="output"><span class="result-ind">9: </span><span class="result">[]
+</span></span><span class="command"><span class="prompt">&gt;&gt;&gt; </span><span class="keyword">def</span> getContacts(nextPageToken=<span class="builtin">None</span>):
+</span><span class="command-defs"><span class="command"><span class="prompt">... </span>  <span class="keyword">if</span> nextPageToken <span class="keyword">is</span> <span class="builtin">None</span>:
+<span class="prompt">... </span>    retval = service.people().connections().<span class="builtin">list</span>(resourceName=<span class="string">'people/me'</span>).execute()
+<span class="prompt">... </span>
+<span class="prompt">... </span>  <span class="keyword">else</span>:
+<span class="prompt">... </span>    retval =  service.people().connections().<span class="builtin">list</span>(resourceName=<span class="string">'people/me'</span>, pageToken=nextPageToken).execute()
+<span class="prompt">... </span>  <span class="keyword">return</span> retval</span></span><span class="command">
+</span><span class="commandsep"></span><span class="command"><span class="prompt">&gt;&gt;&gt; </span>results = getContacts(nextpagetoken)
+</span><span class="commandsep"></span><span class="command"><span class="prompt">&gt;&gt;&gt; </span>connections = results.get(<span class="string">'connections'</span>, [])
+</span><span class="commandsep"></span><span class="command"><span class="prompt">&gt;&gt;&gt; </span>connections
+</span><span class="commandsep"></span><span class="output"><span class="result-ind">10: </span><span class="result">[]
+</span></span><span class="command"><span class="prompt">&gt;&gt;&gt; </span>credentials = get_credentials()
+<span class="prompt">... </span>http = credentials.authorize(httplib2.Http())
+<span class="prompt">... </span>service = discovery.build(<span class="string">'people'</span>, <span class="string">'v1'</span>, http=http,
+<span class="prompt">... </span>    discoveryServiceUrl=<span class="string">'https://people.googleapis.com/$discovery/rest'</span>)
+<span class="prompt">... </span>allcontacts={}
+<span class="prompt">... </span>nextpagetoken = <span class="builtin">None</span>
+<span class="prompt">... </span><span class="keyword">print</span> <span class="string">"Retrieving all contacts"</span>
+<span class="prompt">... </span><span class="keyword">while</span> <span class="builtin">True</span>:
+<span class="prompt">... </span>  <span class="keyword">print</span> <span class="string">"total contacts: "</span> + <span class="builtin">str</span>(<span class="builtin">len</span>(allcontacts))
+<span class="prompt">... </span>  results = getContacts(nextpagetoken)
+<span class="prompt">... </span>  connections = results.get(<span class="string">'connections'</span>, [])
+<span class="prompt">... </span>  <span class="keyword">for</span> eachcon <span class="keyword">in</span> connections:
+<span class="prompt">... </span>    allcontacts[eachcon[<span class="string">'resourceName'</span>]] = <span class="builtin">dict</span>(eachcon)
+<span class="prompt">... </span>  <span class="keyword">if</span> <span class="string">'nextPageToken'</span> <span class="keyword">not</span> <span class="keyword">in</span> results:
+<span class="prompt">... </span>    <span class="keyword">break</span>
+<span class="prompt">... </span>  nextpagetoken = results[<span class="string">'nextPageToken'</span>]
+</span><span class="commandsep"></span><span class="output"><span class="stdout">Your browser has been opened to visit:
+
+    https://accounts.google.com/o/oauth2/auth?scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcontacts.readonly&amp;redirect_uri=http%3A%2F%2Flocalhost%3A8080%2F&amp;response_type=code&amp;client_id=515292396488-mqeuihkft538tne0sklf03jg3qcgs2lh.apps.googleusercontent.com&amp;access_type=offline
+
+If your browser is on a different machine then exit and re-run this
+application with the command-line parameter 
+
+  --noauth_local_webserver
+
+Authentication successful.
+Storing credentials to C:\Users\jeremiah.marks\.credentials\GoogContactsExportToCSV
+Retrieving all contacts
+total contacts: 0
+total contacts: 83
+total contacts: 136
+</span></span><span class="command"><span class="prompt">&gt;&gt;&gt; </span>allcontacts[<span class="string">u'people/100239705038582327542'</span>]
+</span><span class="commandsep"></span><span class="output"><span class="result-ind">11: </span><span class="result">{u'etag': u'Lte6E92uDak=',
+ u'metadata': {u'objectType': u'PERSON',
+               u'sources': [{u'etag': u'#09ENj16FkIg=',
+                             u'id': u'7192de360a5bae4d',
+                             u'type': u'CONTACT'},
+                            {u'id': u'100239705038582327542',
+                             u'type': u'PROFILE'}]},
+ u'names': [{u'displayName': u'michael. s. shahin',
+             u'displayNameLastFirst': u'shahin, michael. s.',
+             u'familyName': u'shahin',
+             u'givenName': u'michael.',
+             u'metadata': {u'primary': True,
+                           u'source': {u'id': u'7192de360a5bae4d',
+                                       u'type': u'CONTACT'}},
+             u'middleName': u's.'},
+            {u'displayName': u'Mike Shahin',
+             u'displayNameLastFirst': u'Shahin, Mike',
+             u'familyName': u'Shahin',
+             u'givenName': u'Mike',
+             u'metadata': {u'source': {u'id': u'100239705038582327542',
+                                       u'type': u'PROFILE'}}}],
+ u'photos': [{u'metadata': {u'primary': True,
+                            u'source': {u'id': u'100239705038582327542',
+                                        u'type': u'PROFILE'}},
+              u'url': u'https://lh3.googleusercontent.com/-wiRDiGyiCxw/AAAAAAAAAAI/AAAAAAAAMm0/PAFvUq6ulMI/photo.jpg'},
+             {u'metadata': {u'source': {u'id': u'7192de360a5bae4d',
+                                        u'type': u'CONTACT'}},
+              u'url': u'https://plus.google.com/_/focus/photos/private/AIbEiAIAAAAjCL7Btaes8Ozy9gEQ_YShtqfDiLznARjpkuTavozFw6QBMAG1faAdjOQ75Mcj8JVjBoWzUqmVEA'}],
+ u'resourceName': u'people/100239705038582327542',
+ u'urls': [{u'formattedType': u'Profile',
+            u'metadata': {u'primary': True,
+                          u'source': {u'id': u'100239705038582327542',
+                                      u'type': u'PROFILE'},
+                          u'verified': True},
+            u'type': u'profile',
+            u'value': u'https://plus.google.com/+MikeShahin'}]}
+</span></span><span class="command"><span class="prompt">&gt;&gt;&gt; </span></span></body>
+</html>
