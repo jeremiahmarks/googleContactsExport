@@ -2,7 +2,7 @@
 # @Author: jeremiah.marks
 # @Date:   2016-04-08 06:31:19
 # @Last Modified by:   Jeremiah Marks
-# @Last Modified time: 2016-04-08 08:15:37
+# @Last Modified time: 2016-04-08 08:17:26
 import logging
 import httplib2
 import time
@@ -18,7 +18,7 @@ import argparse
 flags = argparse.Namespace(auth_host_name='localhost', auth_host_port=[8080, 8090], logging_level='ERROR', noauth_local_webserver=True)
 # SCOPES = 'https://www.googleapis.com/auth/contacts.readonly'
 SCOPES = 'https://www.googleapis.com/auth/contacts'
-CLIENT_SECRET_FILE = "C:\\Users\\jeremiah.marks\\Documents\\GitHub\\bexport\\client_secret.json"
+CLIENT_SECRET_FILE = "client_secret.json"
 APPLICATION_NAME = 'contactsexportforinfusionsoft'
 
 logger = logging.getLogger()
